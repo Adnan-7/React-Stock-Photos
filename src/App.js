@@ -1,7 +1,9 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
+const clientID = `?client_id=${process.env.REACT_APP_ACCESS_KEY}`;
 const mainUrl = 'https://api.unsplash.com/photos/';
+const searchUrl = 'https://api.unsplash.com/search/photos/';
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -9,7 +11,8 @@ function App() {
 
   const fetchImages = async () => {
     setLoading(true);
-    let url = `${mainUrl}?client_id=UNnmOmMMFOggg3zg_xLVMr4WxnM1nbLSpmQVDoTXVbg`;
+    let url = `${mainUrl}${clientID}`;
+
     try {
       const { data } = await axios(url);
       console.log(data);
