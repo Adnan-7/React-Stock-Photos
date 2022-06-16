@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { FaSearch } from 'react-icons/fa';
+import Photo from './Photo';
 
 const clientID = `?client_id=${process.env.REACT_APP_ACCESS_KEY}`;
 const mainUrl = 'https://api.unsplash.com/photos/';
@@ -15,7 +17,8 @@ function App() {
 
     try {
       const { data } = await axios(url);
-      console.log(data);
+      setPhotos(data);
+      setLoading(false);
     } catch (error) {
       setLoading(false);
       console.log(error);
@@ -26,10 +29,31 @@ function App() {
     fetchImages();
   }, []);
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('hello');
+  };
+
   return (
-    <div className='App'>
-      <h2>Stock Photos Starter...</h2>
-    </div>
+    <main>
+      <section className='search'>
+        <form className='search-form'>
+          <input type='text' className='form-input' placeholder='search' />
+          <button type='submit' className='submit-btn' onClick={handleSubmit}>
+            <FaSearch />
+          </button>
+        </form>
+      </section>
+
+      <section className='photos'>
+        <div className='photos-center'>
+          {photos.map((image) => {
+            return <Photo key={image.id} {...image} />;
+          })}
+        </div>
+        {loading && <h2 className='loading'>Loading...</h2>}
+      </section>
+    </main>
   );
 }
 
