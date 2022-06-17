@@ -11,17 +11,33 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [photos, setPhotos] = useState([]);
   const [page, setPage] = useState(1);
+  const [query, setQuery] = useState('');
 
   const fetchImages = async () => {
     setLoading(true);
-    const pageUrl = `&page=${page}`;
-    let url = `${mainUrl}${clientID}${pageUrl}`;
+    const urlPage = `&page=${page}`;
+    const urlQuery = `&query=${query}`;
+
+    let url;
+    if (query) {
+      url = `${searchUrl}${clientID}${urlPage}${urlQuery}`;
+    } else {
+      url = `${mainUrl}${clientID}${urlPage}`;
+    }
 
     try {
       const { data } = await axios(url);
-      setPhotos((oldPhotos) => {
-        return [...oldPhotos, ...data];
-      });
+      console.log(data);
+
+      if (query) {
+        setPhotos((oldPhotos) => {
+          return [...oldPhotos, ...data.results];
+        });
+      } else {
+        setPhotos((oldPhotos) => {
+          return [...oldPhotos, ...data];
+        });
+      }
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -35,6 +51,7 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    fetchImages();
     console.log('hello');
   };
 
@@ -57,7 +74,13 @@ function App() {
     <main>
       <section className='search'>
         <form className='search-form'>
-          <input type='text' className='form-input' placeholder='search' />
+          <input
+            type='text'
+            className='form-input'
+            placeholder='search'
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
           <button type='submit' className='submit-btn' onClick={handleSubmit}>
             <FaSearch />
           </button>
