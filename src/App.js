@@ -29,15 +29,14 @@ function App() {
       const { data } = await axios(url);
       console.log(data);
 
-      if (query) {
-        setPhotos((oldPhotos) => {
+      setPhotos((oldPhotos) => {
+        if (query) {
           return [...oldPhotos, ...data.results];
-        });
-      } else {
-        setPhotos((oldPhotos) => {
+        } else {
           return [...oldPhotos, ...data];
-        });
-      }
+        }
+      });
+
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -51,8 +50,10 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!query) return;
+    setPage(1);
+    setPhotos([]);
     fetchImages();
-    console.log('hello');
   };
 
   useEffect(() => {
@@ -89,8 +90,8 @@ function App() {
 
       <section className='photos'>
         <div className='photos-center'>
-          {photos.map((image) => {
-            return <Photo key={image.id} {...image} />;
+          {photos.map((image, index) => {
+            return <Photo key={index} {...image} />;
           })}
         </div>
         {loading && <h2 className='loading'>Loading...</h2>}
