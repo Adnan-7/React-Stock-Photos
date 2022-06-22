@@ -1,4 +1,4 @@
-# React Stock Photos
+## React Stock Photos
 
 
 # Getting Started with Create React App
